@@ -1,38 +1,40 @@
-import React, { useReducer } from 'react'
+import { createContext, useReducer } from 'react'
 import styles from './app.module.scss'
 import SectionOfProcess from './Components/SectionOfProcess'
 import INITIAL_STATE from './context/INITIAL_STATE'
-
-const steps = [
+const STEPS = [
   'Entrevista inicial',
   'Entrevista técnica',
   'Oferta',
   'Asignación',
   'Rechazo',
 ]
+export const CandidatesContext = createContext('')
 
 const retornarStepNext = (step) => {
-  const index = steps.findIndex((steps) => steps === step)
-  if (index < steps.length - 1) {
+  const index = STEPS.findIndex((steps) => steps === step)
+  if (index < STEPS.length - 1) {
     return index + 1
   }
   return index
 }
 const retornarStepPrev = (step) => {
-  const index = steps.findIndex((steps) => steps === step)
+  const index = STEPS.findIndex((steps) => steps === step)
   if (index > 0) {
     return index - 1
   }
   return index
 }
 function App() {
+  const [candidates, dispatch] = useReducer(reducer, INITIAL_STATE)
+
   function reducer(state, action) {
     switch (action.type) {
       case 'NEXT_STEP':
         return state.map((candidate) => {
           if (candidate.id === action.payload.id) {
             const stepNext = retornarStepNext(candidate.step)
-            return { ...candidate, step: steps[stepNext] }
+            return { ...candidate, step: STEPS[stepNext] }
           } else {
             return candidate
           }
@@ -41,7 +43,21 @@ function App() {
         return state.map((candidate) => {
           if (candidate.id === action.payload.id) {
             const stepPrev = retornarStepPrev(candidate.step)
-            return { ...candidate, step: steps[stepPrev] }
+            return { ...candidate, step: STEPS[stepPrev] }
+          } else {
+            return candidate
+          }
+        })
+      case 'ADD':
+        return [...state, action.payload]
+      case 'EDIT':
+        return state.map((candidate) => {
+          if (candidate.id === action.payload.id) {
+            return {
+              ...candidate,
+              name: action.payload.name,
+              comments: action.payload.comments,
+            }
           } else {
             return candidate
           }
@@ -51,36 +67,16 @@ function App() {
     }
   }
 
-  const [candidates, dispatch] = useReducer(reducer, INITIAL_STATE)
-
   return (
-    <main className={styles.main}>
-      <SectionOfProcess
-        title={'Entrevista inicial'}
-        candidates={candidates}
-        dispatch={dispatch}
-      />
-      <SectionOfProcess
-        title={'Entrevista técnica'}
-        candidates={candidates}
-        dispatch={dispatch}
-      />
-      <SectionOfProcess
-        title={'Oferta'}
-        candidates={candidates}
-        dispatch={dispatch}
-      />
-      <SectionOfProcess
-        title={'Asignación'}
-        candidates={candidates}
-        dispatch={dispatch}
-      />
-      <SectionOfProcess
-        title={'Rechazo'}
-        candidates={candidates}
-        dispatch={dispatch}
-      />
-    </main>
+    <CandidatesContext.Provider value={{ candidates, dispatch }}>
+      <main className={styles.main}>
+        <SectionOfProcess title={'Entrevista inicial'} />
+        <SectionOfProcess title={'Entrevista técnica'} />
+        <SectionOfProcess title={'Oferta'} />
+        <SectionOfProcess title={'Asignación'} />
+        <SectionOfProcess title={'Rechazo'} />
+      </main>
+    </CandidatesContext.Provider>
   )
 }
 

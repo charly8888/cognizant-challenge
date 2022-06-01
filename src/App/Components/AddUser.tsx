@@ -25,7 +25,13 @@ function handleSubmit(e, setToggleViewForm, dispatch, id) {
   }
 }
 
-const AddUser = ({ setToggleViewForm, name = '', comments = '', id }) => {
+const AddUser = ({
+  setToggleViewForm,
+  name = '',
+  comments = '',
+  id,
+  buttonContent = 'Agregar',
+}) => {
   const { dispatch } = useContext(CandidatesContext)
   const [valueTextName, setValueTextName] = useState(name)
   const [valueTextComments, setValueTextComments] = useState(comments)
@@ -33,21 +39,23 @@ const AddUser = ({ setToggleViewForm, name = '', comments = '', id }) => {
     <article className={styles.container}>
       <form onSubmit={(e) => handleSubmit(e, setToggleViewForm, dispatch, id)}>
         <label>
-          <p>Name</p>
+          <p className={styles.headings}>NAME:</p>
           <input
             value={valueTextName}
             onChange={(e) => setValueTextName(e.target.value)}
           />
         </label>
         <label>
-          <p>Comments</p>
+          <p>COMMENTS:</p>
           <input
             value={valueTextComments}
             onChange={(e) => setValueTextComments(e.target.value)}
           />
         </label>
-        <button>Agregar</button>
+        <button>{buttonContent}</button>
       </form>
+
+      <button className={styles.closeButton} onClick={() => setToggleViewForm(false)}>X</button>
     </article>
   )
 }

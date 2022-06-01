@@ -37,12 +37,15 @@ const CandidateCard: FC<props> = ({ name, comments, id }) => {
         </button>
       </article>
       {toggleViewForm && (
-        <AddUser
-          setToggleViewForm={setToggleViewForm}
-          name={name}
-          comments={comments}
-          id={id}
-        />
+        <div className={styles.containerAddUser}>
+          <AddUser
+            setToggleViewForm={setToggleViewForm}
+            name={name}
+            comments={comments}
+            id={id}
+            buttonContent={'Editar'}
+          />
+        </div>
       )}
     </>
   )

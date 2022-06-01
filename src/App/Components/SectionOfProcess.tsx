@@ -20,9 +20,9 @@ const SectionOfProcess: FC<props> = ({ title }) => {
 
   return (
     <section className={styles.section}>
-      <h1>{title}</h1>
+      <h1 className={styles.heading}>{title}</h1>
       {arrayOfCandidates.length === 0 ? (
-        <h2>No hay usuarios</h2>
+        <h2 className={styles.noneUsers}>No hay usuarios</h2>
       ) : (
         arrayOfCandidates.map(({ step, name, comments, id }) => {
           if (step === title)
@@ -32,11 +32,17 @@ const SectionOfProcess: FC<props> = ({ title }) => {
         })
       )}
       {title === 'Entrevista inicial' && (
-        <button onClick={() => setToggleViewForm(!toggleViewForm)}>
-          Agregar usuario
-        </button>
+        <div className={styles.addUserButton}>
+          <button onClick={() => setToggleViewForm(!toggleViewForm)}>
+            Agregar usuario
+          </button>
+        </div>
       )}
-      {toggleViewForm && <AddUser setToggleViewForm={setToggleViewForm} />}
+      {toggleViewForm && (
+        <div className={styles.containerAddUser}>
+          <AddUser setToggleViewForm={setToggleViewForm} />
+        </div>
+      )}
     </section>
   )
 }

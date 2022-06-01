@@ -1,8 +1,14 @@
-.container{
-  margin: .5rem;
+.container {
+  margin: 0.5rem;
   background-color: bisque;
-  padding: .3rem;
+  padding: 0.3rem;
 }
-.heading{
-  text-align: left;
+.containerAddUser {
+  position: relative;
+  // height: 100%;
+  width: 100%;
+  // background-color: aqua;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

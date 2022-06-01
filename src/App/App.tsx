@@ -1,7 +1,9 @@
-import { createContext, useReducer } from 'react'
+import { createContext, useEffect, useReducer } from 'react'
+import api from '../api'
 import styles from './app.module.scss'
 import SectionOfProcess from './Components/SectionOfProcess'
-import INITIAL_STATE from './context/INITIAL_STATE'
+import setCandidatesOnLocalStorage from './setCandidatesOnLocalStorage'
+
 const STEPS = [
   'Entrevista inicial',
   'Entrevista técnica',
@@ -25,11 +27,29 @@ const retornarStepPrev = (step) => {
   }
   return index
 }
+
 function App() {
-  const [candidates, dispatch] = useReducer(reducer, INITIAL_STATE)
+  function setStorageApi(e) {
+    dispatch({ type: 'INICIAL', payload: e })
+    console.log(e)
+  }
+  const [candidates, dispatch] = useReducer(reducer, [])
+  useEffect(() => {
+    api.candidates.list().then(setStorageApi)
+    console.log('ejecucion de efect normal')
+    console.log(candidates)
+  }, [])
+
+  useEffect(() => {
+    console.log('ejecucion de storage')
+    setCandidatesOnLocalStorage(candidates)
+  }, [candidates])
 
   function reducer(state, action) {
     switch (action.type) {
+      case 'INICIAL':
+        return action.payload
+
       case 'NEXT_STEP':
         return state.map((candidate) => {
           if (candidate.id === action.payload.id) {

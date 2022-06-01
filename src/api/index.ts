@@ -1,8 +1,8 @@
-import { Candidate } from '../types/candidate'
+import { Candidate } from '../types'
 
 export default {
   candidates: {
     list: (): Promise<Candidate[]> =>
-      Promise.resolve(JSON.parse(localStorage.getItem('candidates'))),
+      Promise.resolve(JSON.parse(localStorage.getItem('candidates') || '[]')),
   },
 }

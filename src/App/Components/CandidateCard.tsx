@@ -9,7 +9,7 @@ interface props {
   id: string
 }
 const CandidateCard: FC<props> = ({ name, comments, id }) => {
-  const { dispatch } = useContext(CandidatesContext)
+  const { dispatch }: any = useContext(CandidatesContext)
   const [toggleViewForm, setToggleViewForm] = useState(false)
 
   return (

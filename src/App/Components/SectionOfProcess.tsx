@@ -1,18 +1,26 @@
 import { FC, useContext, useState } from 'react'
 import { Candidate } from '../../types/candidate'
+import { Steps } from '../../types/steps'
 import { CandidatesContext } from '../App'
 import AddUser from './AddUser'
 import CandidateCard from './CandidateCard'
 import styles from './sectionOfProcess.module.scss'
 
-interface props {
+interface Props {
   title: string
-  candidates: Array<Candidate>
 }
-
-const SectionOfProcess: FC<props> = ({ title }) => {
+interface MapArrayOfCandidates {
+  step: Steps
+  name: string
+  comments: string
+  id: string
+}
+interface Candidates {
+  candidates: Candidate[]
+}
+const SectionOfProcess: FC<Props> = ({ title }) => {
   const [toggleViewForm, setToggleViewForm] = useState(false)
-  const { candidates } = useContext(CandidatesContext)
+  const { candidates }: Candidates = useContext(CandidatesContext)
 
   const arrayOfCandidates = candidates.filter((e) => {
     if (e.step === title) return e
@@ -24,12 +32,19 @@ const SectionOfProcess: FC<props> = ({ title }) => {
       {arrayOfCandidates.length === 0 ? (
         <h2 className={styles.noneUsers}>No hay usuarios</h2>
       ) : (
-        arrayOfCandidates.map(({ step, name, comments, id }) => {
-          if (step === title)
-            return (
-              <CandidateCard name={name} comments={comments} key={id} id={id} />
-            )
-        })
+        arrayOfCandidates.map(
+          ({ step, name, comments, id }: MapArrayOfCandidates) => {
+            if (step === title)
+              return (
+                <CandidateCard
+                  name={name}
+                  comments={comments}
+                  key={id}
+                  id={id}
+                />
+              )
+          }
+        )
       )}
       {title === 'Entrevista inicial' && (
         <div className={styles.addUserButton}>

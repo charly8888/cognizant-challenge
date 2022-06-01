@@ -1,10 +1,12 @@
-import { createContext, useEffect, useReducer } from 'react'
+import React, { createContext, useEffect, useReducer } from 'react'
 import api from '../api'
+import { Candidate } from '../types/candidate'
+import { Steps } from '../types/steps'
 import styles from './app.module.scss'
 import SectionOfProcess from './Components/SectionOfProcess'
 import setCandidatesOnLocalStorage from './setCandidatesOnLocalStorage'
 
-const STEPS = [
+const STEPS: Steps[] = [
   'Entrevista inicial',
   'Entrevista técnica',
   'Oferta',
@@ -13,14 +15,14 @@ const STEPS = [
 ]
 export const CandidatesContext = createContext('')
 
-const retornarStepNext = (step) => {
+const retornarStepNext = (step: Steps) => {
   const index = STEPS.findIndex((steps) => steps === step)
   if (index < STEPS.length - 1) {
     return index + 1
   }
   return index
 }
-const retornarStepPrev = (step) => {
+const retornarStepPrev = (step: Steps) => {
   const index = STEPS.findIndex((steps) => steps === step)
   if (index > 0) {
     return index - 1
@@ -45,13 +47,13 @@ function App() {
     setCandidatesOnLocalStorage(candidates)
   }, [candidates])
 
-  function reducer(state, action) {
+  function reducer(state: Candidate[], action: any) {
     switch (action.type) {
       case 'INICIAL':
         return action.payload
 
       case 'NEXT_STEP':
-        return state.map((candidate) => {
+        return state.map((candidate: Candidate) => {
           if (candidate.id === action.payload.id) {
             const stepNext = retornarStepNext(candidate.step)
             return { ...candidate, step: STEPS[stepNext] }
@@ -60,7 +62,7 @@ function App() {
           }
         })
       case 'PREV_STEP':
-        return state.map((candidate) => {
+        return state.map((candidate: Candidate) => {
           if (candidate.id === action.payload.id) {
             const stepPrev = retornarStepPrev(candidate.step)
             return { ...candidate, step: STEPS[stepPrev] }
@@ -71,7 +73,7 @@ function App() {
       case 'ADD':
         return [...state, action.payload]
       case 'EDIT':
-        return state.map((candidate) => {
+        return state.map((candidate: Candidate) => {
           if (candidate.id === action.payload.id) {
             return {
               ...candidate,
@@ -88,13 +90,18 @@ function App() {
   }
 
   return (
-    <CandidatesContext.Provider value={{ candidates, dispatch }}>
+    <CandidatesContext.Provider
+      value={{
+        candidates,
+        dispatch,
+      }}
+    >
       <main className={styles.main}>
-        <SectionOfProcess title={'Entrevista inicial'} />
-        <SectionOfProcess title={'Entrevista técnica'} />
-        <SectionOfProcess title={'Oferta'} />
-        <SectionOfProcess title={'Asignación'} />
-        <SectionOfProcess title={'Rechazo'} />
+        <SectionOfProcess title="Entrevista inicial" />
+        <SectionOfProcess title="Entrevista técnica" />
+        <SectionOfProcess title="Oferta" />
+        <SectionOfProcess title="Asignación" />
+        <SectionOfProcess title="Rechazo" />
       </main>
     </CandidatesContext.Provider>
   )

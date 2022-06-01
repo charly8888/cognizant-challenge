@@ -3,24 +3,29 @@ import { Candidate } from '../../types/candidate'
 import { CandidatesContext } from '../App'
 import styles from './addUser.module.scss'
 
-function handleSubmit(e, setToggleViewForm, dispatch, id) {
-  e.preventDefault()
-  if (e.target[0].value === '') return
+function handleSubmit(
+  event: React.SyntheticEvent<HTMLFormElement>,
+  setToggleViewForm,
+  dispatch,
+  id: string
+) {
+  event.preventDefault()
+  if (event.currentTarget.elements.nameInput.value === '') return
 
   setToggleViewForm(false)
   if (id === undefined) {
     const newId = +new Date()
     const newCandidate: Candidate = {
-      name: e.target[0].value,
-      comments: e.target[1].value,
+      name: event.currentTarget.elements.nameInput.value,
+      comments: event.currentTarget.elements.commentInput.value,
       id: newId.toString(),
       step: 'Entrevista inicial',
     }
     dispatch({ type: 'ADD', payload: newCandidate })
     console.log(newCandidate)
   } else {
-    const name = e.target[0].value
-    const comments = e.target[1].value
+    const name = event.currentTarget.elements.nameInput.value
+    const comments = event.currentTarget.elements.commentInput.value
     dispatch({ type: 'EDIT', payload: { name, comments, id } })
   }
 }
@@ -32,7 +37,7 @@ const AddUser = ({
   id,
   buttonContent = 'Agregar',
 }) => {
-  const { dispatch } = useContext(CandidatesContext)
+  const { dispatch }: any = useContext(CandidatesContext)
   const [valueTextName, setValueTextName] = useState(name)
   const [valueTextComments, setValueTextComments] = useState(comments)
   return (
@@ -43,6 +48,7 @@ const AddUser = ({
           <input
             value={valueTextName}
             onChange={(e) => setValueTextName(e.target.value)}
+            id="nameInput"
           />
         </label>
         <label>
@@ -50,12 +56,18 @@ const AddUser = ({
           <input
             value={valueTextComments}
             onChange={(e) => setValueTextComments(e.target.value)}
+            id="commentInput"
           />
         </label>
         <button>{buttonContent}</button>
       </form>
 
-      <button className={styles.closeButton} onClick={() => setToggleViewForm(false)}>X</button>
+      <button
+        className={styles.closeButton}
+        onClick={() => setToggleViewForm(false)}
+      >
+        X
+      </button>
     </article>
   )
 }

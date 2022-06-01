@@ -1,4 +1,5 @@
-const setCandidatesOnLocalStorage = (object) => {
-  localStorage.setItem('candidates', JSON.stringify(object))
+import { Candidate } from '../types/index';
+const setCandidatesOnLocalStorage = (arrOfCandidates: Candidate[]) => {
+  localStorage.setItem('candidates', JSON.stringify(arrOfCandidates))
 }
 export default setCandidatesOnLocalStorage

@@ -1,41 +1,21 @@
-import React, { createContext, useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import api from '../api'
-import { Candidate } from '../types/candidate'
-import { Steps } from '../types/steps'
+import TYPES_REDUCERS from '../constants/TYPES_REDUCERS'
+import { Candidate } from '../types'
 import styles from './app.module.scss'
 import SectionOfProcess from './Components/SectionOfProcess'
+import { CandidatesContext } from './context/candidatesContext'
+import { reducer } from './context/reducer'
 import setCandidatesOnLocalStorage from './setCandidatesOnLocalStorage'
 
-const STEPS: Steps[] = [
-  'Entrevista inicial',
-  'Entrevista técnica',
-  'Oferta',
-  'Asignación',
-  'Rechazo',
-]
-export const CandidatesContext = createContext('')
-
-const retornarStepNext = (step: Steps) => {
-  const index = STEPS.findIndex((steps) => steps === step)
-  if (index < STEPS.length - 1) {
-    return index + 1
-  }
-  return index
-}
-const retornarStepPrev = (step: Steps) => {
-  const index = STEPS.findIndex((steps) => steps === step)
-  if (index > 0) {
-    return index - 1
-  }
-  return index
-}
-
 function App() {
-  function setStorageApi(e) {
-    dispatch({ type: 'INICIAL', payload: e })
-    console.log(e)
+  function setStorageApi(arrOfCandidates: Candidate[]) {
+    dispatch({ type: TYPES_REDUCERS.INICIAL, payload: arrOfCandidates })
+    console.log(arrOfCandidates)
   }
+
   const [candidates, dispatch] = useReducer(reducer, [])
+
   useEffect(() => {
     api.candidates.list().then(setStorageApi)
     console.log('ejecucion de efect normal')
@@ -46,48 +26,6 @@ function App() {
     console.log('ejecucion de storage')
     setCandidatesOnLocalStorage(candidates)
   }, [candidates])
-
-  function reducer(state: Candidate[], action: any) {
-    switch (action.type) {
-      case 'INICIAL':
-        return action.payload
-
-      case 'NEXT_STEP':
-        return state.map((candidate: Candidate) => {
-          if (candidate.id === action.payload.id) {
-            const stepNext = retornarStepNext(candidate.step)
-            return { ...candidate, step: STEPS[stepNext] }
-          } else {
-            return candidate
-          }
-        })
-      case 'PREV_STEP':
-        return state.map((candidate: Candidate) => {
-          if (candidate.id === action.payload.id) {
-            const stepPrev = retornarStepPrev(candidate.step)
-            return { ...candidate, step: STEPS[stepPrev] }
-          } else {
-            return candidate
-          }
-        })
-      case 'ADD':
-        return [...state, action.payload]
-      case 'EDIT':
-        return state.map((candidate: Candidate) => {
-          if (candidate.id === action.payload.id) {
-            return {
-              ...candidate,
-              name: action.payload.name,
-              comments: action.payload.comments,
-            }
-          } else {
-            return candidate
-          }
-        })
-      default:
-        return state
-    }
-  }
 
   return (
     <CandidatesContext.Provider

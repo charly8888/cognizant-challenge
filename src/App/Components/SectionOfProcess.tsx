@@ -1,7 +1,6 @@
 import { FC, useContext, useState } from 'react'
-import { Candidate } from '../../types/candidate'
-import { Steps } from '../../types/steps'
-import { CandidatesContext } from '../App'
+import { Steps } from '../../types'
+import { CandidatesContext } from '../context/candidatesContext'
 import AddUser from './AddUser'
 import CandidateCard from './CandidateCard'
 import styles from './sectionOfProcess.module.scss'
@@ -9,42 +8,30 @@ import styles from './sectionOfProcess.module.scss'
 interface Props {
   title: string
 }
-interface MapArrayOfCandidates {
-  step: Steps
-  name: string
-  comments: string
-  id: string
-}
-interface Candidates {
-  candidates: Candidate[]
-}
+
 const SectionOfProcess: FC<Props> = ({ title }) => {
   const [toggleViewForm, setToggleViewForm] = useState(false)
-  const { candidates }: Candidates = useContext(CandidatesContext)
+  const context = useContext(CandidatesContext)
 
-  const arrayOfCandidates = candidates.filter((e) => {
+  console.log(context)
+
+  const candidates = context.candidates
+  const arrayOfCandidates = candidates?.filter((e) => {
     if (e.step === title) return e
   })
 
   return (
     <section className={styles.section}>
       <h1 className={styles.heading}>{title}</h1>
-      {arrayOfCandidates.length === 0 ? (
+      {arrayOfCandidates?.length === 0 ? (
         <h2 className={styles.noneUsers}>No hay usuarios</h2>
       ) : (
-        arrayOfCandidates.map(
-          ({ step, name, comments, id }: MapArrayOfCandidates) => {
-            if (step === title)
-              return (
-                <CandidateCard
-                  name={name}
-                  comments={comments}
-                  key={id}
-                  id={id}
-                />
-              )
-          }
-        )
+        arrayOfCandidates?.map(({ step, name, comments, id }) => {
+          if (step === title)
+            return (
+              <CandidateCard name={name} comments={comments} key={id} id={id} />
+            )
+        })
       )}
       {title === 'Entrevista inicial' && (
         <div className={styles.addUserButton}>

@@ -1,5 +1,6 @@
 import { FC, useContext, useState } from 'react'
-import { CandidatesContext } from '../App'
+import TYPES_REDUCERS from '../../constants/TYPES_REDUCERS'
+import { CandidatesContext } from '../context/candidatesContext'
 import AddUser from './AddUser'
 import styles from './candidateCard.module.scss'
 
@@ -18,12 +19,16 @@ const CandidateCard: FC<props> = ({ name, comments, id }) => {
         <h2 className={styles.heading}>{name}</h2>
         <p className={styles.description}>{comments}</p>
         <button
-          onClick={() => dispatch({ type: 'PREV_STEP', payload: { id } })}
+          onClick={() =>
+            dispatch({ type: TYPES_REDUCERS.PREV_STEP, payload: { id } })
+          }
         >
           {'<'}
         </button>
         <button
-          onClick={() => dispatch({ type: 'NEXT_STEP', payload: { id } })}
+          onClick={() =>
+            dispatch({ type: TYPES_REDUCERS.NEXT_STEP, payload: { id } })
+          }
         >
           {'>'}
         </button>
@@ -41,9 +46,9 @@ const CandidateCard: FC<props> = ({ name, comments, id }) => {
           <AddUser
             setToggleViewForm={setToggleViewForm}
             name={name}
-            comments={comments}
             id={id}
             buttonContent={'Editar'}
+            comments={comments}
           />
         </div>
       )}

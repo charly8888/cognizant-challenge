@@ -1,36 +1,52 @@
-import { useContext, useState } from 'react'
-import { Candidate } from '../../types/candidate'
-import { CandidatesContext } from '../App'
+import { Dispatch, FC, SetStateAction, useContext, useState } from 'react'
+import TYPES_REDUCERS from '../../constants/TYPES_REDUCERS'
+import { Candidate } from '../../types'
+import { CandidatesContext } from '../context/candidatesContext'
 import styles from './addUser.module.scss'
 
 function handleSubmit(
   event: React.SyntheticEvent<HTMLFormElement>,
-  setToggleViewForm,
-  dispatch,
-  id: string
+  setToggleViewForm: Dispatch<SetStateAction<boolean>>,
+  dispatch: any,
+  id: string | undefined
 ) {
   event.preventDefault()
-  if (event.currentTarget.elements.nameInput.value === '') return
+
+  const target = event.target as typeof event.target & {
+    nameInput: { value: string };
+    commentInput: { value: string };
+  };
+  if (target.nameInput.value === '') return
 
   setToggleViewForm(false)
+
   if (id === undefined) {
     const newId = +new Date()
     const newCandidate: Candidate = {
-      name: event.currentTarget.elements.nameInput.value,
-      comments: event.currentTarget.elements.commentInput.value,
+      name: target.nameInput.value,
+      comments: target.commentInput.value,
       id: newId.toString(),
       step: 'Entrevista inicial',
     }
-    dispatch({ type: 'ADD', payload: newCandidate })
+    dispatch({ type: TYPES_REDUCERS.ADD, payload: newCandidate })
     console.log(newCandidate)
   } else {
-    const name = event.currentTarget.elements.nameInput.value
-    const comments = event.currentTarget.elements.commentInput.value
-    dispatch({ type: 'EDIT', payload: { name, comments, id } })
+    const name = target.nameInput.value
+    const comments = target.commentInput.value
+    dispatch({ type: TYPES_REDUCERS.EDIT, payload: { name, comments, id } })
   }
+  
 }
 
-const AddUser = ({
+interface PropsAddUser {
+  name?: string
+  comments?: string
+  id?: string
+  buttonContent?: string
+  setToggleViewForm: Dispatch<SetStateAction<boolean>>
+}
+
+const AddUser: FC<PropsAddUser> = ({
   setToggleViewForm,
   name = '',
   comments = '',
@@ -48,7 +64,7 @@ const AddUser = ({
           <input
             value={valueTextName}
             onChange={(e) => setValueTextName(e.target.value)}
-            id="nameInput"
+            name="nameInput"
           />
         </label>
         <label>
@@ -56,7 +72,7 @@ const AddUser = ({
           <input
             value={valueTextComments}
             onChange={(e) => setValueTextComments(e.target.value)}
-            id="commentInput"
+            name="commentInput"
           />
         </label>
         <button>{buttonContent}</button>

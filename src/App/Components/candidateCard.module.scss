@@ -2,6 +2,12 @@
   margin: 0.5rem;
   background-color: bisque;
   padding: 0.3rem;
+  position: relative;
+  text-align: start;
+  & h2,
+  p {
+    margin-bottom: 0.3rem;
+  }
 }
 .containerAddUser {
   position: relative;
@@ -11,4 +17,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.containerButtonsRightAndLeft {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+}
+.iconEdit,
+.iconPrev,
+.iconNext {
+  width: 1rem;
+}
+.buttonEdit,
+.buttonRight,
+.buttonLeft {
+  background-color: #09f;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+}
+.buttonRight,
+.buttonLeft {
+  position: relative;
+  background-color: rgb(233, 121, 47);
+  // margin: .3rem;
 }

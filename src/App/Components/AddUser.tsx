@@ -3,6 +3,7 @@ import TYPES_REDUCERS from '../../constants/TYPES_REDUCERS'
 import { Candidate } from '../../types'
 import { CandidatesContext } from '../context/candidatesContext'
 import styles from './addUser.module.scss'
+import Cross from './icons/Cross'
 
 function handleSubmit(
   event: React.SyntheticEvent<HTMLFormElement>,
@@ -35,7 +36,7 @@ function handleSubmit(
     const comments = target.commentInput.value
     dispatch({ type: TYPES_REDUCERS.EDIT, payload: { name, comments, id } })
   }
-  
+
 }
 
 interface PropsAddUser {
@@ -82,7 +83,7 @@ const AddUser: FC<PropsAddUser> = ({
         className={styles.closeButton}
         onClick={() => setToggleViewForm(false)}
       >
-        X
+        <Cross className={styles.iconCross}/>
       </button>
     </article>
   )
